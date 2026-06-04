@@ -5,7 +5,7 @@ function load_env($path) {
 	if (! $file) return false;
 
 	while(($line = fgets($file)) !== false) {
-		$pieces = explode("=", $line);
+		$pieces = array_map('trim', explode("=", $line));
 		$_ENV[$pieces[0]] = $pieces[1];
 	}
 

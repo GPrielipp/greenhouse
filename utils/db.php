@@ -1,11 +1,12 @@
 <?php
 
-require_once('./load_env.php');
+require_once(__DIR__ . '/load_env.php');
 
 load_env(__DIR__);
 
 function connect() {
-	$dsn = "mysql:host={$_ENV['ADDR']};dbname={$_ENV['DB']};charset=utf8mb4;";
+	$dsn = "mysql:host={$_ENV['ADDR']};dbname={$_ENV['DB']};";
+	error_log("[DEBUG] dsn = '$dsn'");
 	$opts = [
 		PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
 		PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -17,7 +18,7 @@ function connect() {
 		return $pdo;
 	} catch (\PDOException $e) {
 		// log error message
-		file_put_contents(__DIR__ . '/db.log', "[" . date('Y-m-d H:i:s') . "] [ERROR] " . $e->getMessage(), FILE_APPEND);	
+		file_put_contents('/var/log/db/db.log', "[" . date('Y-m-d H:i:s') . "] [ERROR] " . $e->getMessage() . "\n", FILE_APPEND);	
 		return false;
 	}
 }
@@ -37,7 +38,7 @@ function get($table, $columns, $constraints) {
 	$query = $query . ';';
 
 	# prepare and bind the values
-	$stmt = $db.prepare($query);
+	$stmt = $db->prepare($query);
 
 	foreach($constraints as $column => $value) {
 		# value = [value, PDO_TYPE]
@@ -70,7 +71,9 @@ function put($table, $data) {
 	$query = "INSERT INTO $table ($columns) VALUES ($values);";
 
 	# prepare and bind the values
-	$stmt = $db.prepare($query);
+	if($db === null) error_log('[!!! ERROR !!!] PDO is null');
+	
+	$stmt = $db->prepare($query);
 
 	foreach($data as $column => $value) {
 		# value = [value, PDO_TYPE]
@@ -79,7 +82,7 @@ function put($table, $data) {
 
 	# execute and return results
 	$stmt->execute();
-	$lastID = $stmt->lastInsertId();
+	$lastID = $db->lastInsertId();
 	return $lastID;
 }
 
@@ -106,7 +109,7 @@ function update($table, $data) {
 	$query = "INSERT INTO $table ($columns) VALUES ($values) ON DUPLICATE KEY UPDATE $updates;";
 
 	# prepare and bind the values
-	$stmt = $db.prepare($query);
+	$stmt = $db->prepare($query);
 
 	foreach($data as $column => $value) {
 		# value = [value, PDO_TYPE]
