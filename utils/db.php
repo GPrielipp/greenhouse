@@ -1,10 +1,10 @@
 <?php
 
-require_once('/utils/load_env.php');
+require_once('./load_env.php');
 
-load_env('/utils');
+load_env(__DIR__);
 
-connect() {
+function connect() {
 	$dsn = "mysql:host={$_ENV['ADDR']};dbname={$_ENV['DB']};charset=utf8mb4;";
 	$opts = [
 		PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -22,14 +22,14 @@ connect() {
 	}
 }
 
-get(table, columns, constraints) {
+function get($table, $columns, $constraints) {
 	$db = connect();
 	if(!$db) return false;
 
 	# build the query
 	$query = 'SELECT ' . implode(' ', $columns) . ' FROM ' . $table . ' WHERE ';
 	$count = 0;
-	for($constraints as $column => $value) {
+	foreach($constraints as $column => $value) {
 		if($count > 0) $query = $query . " AND ";
 		$query = $query . "$column = :$column";
 		$count = $count + 1;
@@ -39,7 +39,7 @@ get(table, columns, constraints) {
 	# prepare and bind the values
 	$stmt = $db.prepare($query);
 
-	for($constraints as $column => $value) {
+	foreach($constraints as $column => $value) {
 		# value = [value, PDO_TYPE]
 		$stmt->bindValue(":$column", $value[0], $value[1]);
 	}
@@ -50,7 +50,7 @@ get(table, columns, constraints) {
 	return $results;
 }
 
-put(table, data) {
+function put($table, $data) {
 	$db = connect();
 	if(!$db) return false;
 
@@ -58,7 +58,7 @@ put(table, data) {
 	$columns = '';
 	$values = '';
 	$count = 0;
-	for($data as $column => $value) {
+	foreach($data as $column => $value) {
 		if($count > 0) {
 			$columns = $columns . ',';
 			$values = $values . ',';
@@ -72,7 +72,7 @@ put(table, data) {
 	# prepare and bind the values
 	$stmt = $db.prepare($query);
 
-	for($data as $column => $value) {
+	foreach($data as $column => $value) {
 		# value = [value, PDO_TYPE]
 		$stmt->bindValue(":$column", $value[0], $value[1]);
 	}
@@ -83,7 +83,7 @@ put(table, data) {
 	return $lastID;
 }
 
-update(table, data) {
+function update($table, $data) {
 	$db = connect();
 	if(!$db) return false;
 
@@ -92,7 +92,7 @@ update(table, data) {
 	$values = '';
 	$updates = '';
 	$count = 0;
-	for($data as $column => $value) {
+	foreach($data as $column => $value) {
 		if($count > 0) {
 			$columns = $columns . ',';
 			$values = $values . ',';
@@ -108,7 +108,7 @@ update(table, data) {
 	# prepare and bind the values
 	$stmt = $db.prepare($query);
 
-	for($data as $column => $value) {
+	foreach($data as $column => $value) {
 		# value = [value, PDO_TYPE]
 		$stmt->bindValue(":$column", $value[0], $value[1]);
 		$stmt->bindValue(":update_$column", $value[0], $value[1]);

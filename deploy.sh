@@ -4,7 +4,7 @@
 webserver=/var/www/html/
 
 echo "copying all files to webserver"
-find . -type f -regextype posix-extended -regex ".*\.(php|css|html|js)" -print0 | while IFS= read -r -d '' file; do
+find . -type f -regextype posix-extended -regex ".*\.htaccess|.*\.env|.*\.(php|css|html|js)" -print0 | while IFS= read -r -d '' file; do
 	# make sure the file exists
 	[ -e "$file" ] || continue
 	cp --parents "$file" "$webserver"
