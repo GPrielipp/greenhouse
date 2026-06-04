@@ -1,0 +1,15 @@
+:root {
+	--bg: #280020;
+	--accent: #7f26a1;
+	--text: #fefff7;
+	--primary: #c2ad75;
+	--secondary: #2e89a3;
+}
+
+body {
+	background-color: var(--bg);
+	color: var(--text);
+	font-family: "Henny Penny", "Playfair Display", "Arvo", serif;
+}
+
+
