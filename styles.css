@@ -4,6 +4,10 @@
 	--text: #fefff7;
 	--primary: #c2ad75;
 	--secondary: #2e89a3;
+	--warning: #eba307;
+	--error: #ed3124;
+	--padding: 0.25em;
+	--margin: 0.5em;
 }
 
 body {
@@ -12,4 +16,60 @@ body {
 	font-family: "Henny Penny", "Playfair Display", "Arvo", serif;
 }
 
+.center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
 
+.primary {
+	background-color: var(--primary);
+}
+
+.secondary {
+	background-color: var(--secondary);
+}
+
+.accent {
+	background-color: var(--accent);
+}
+
+.warning {
+	background-color: var(--warning);
+}
+
+.error { 
+	background-color: var(--error);
+}
+
+.card {
+	min-width: 10vw;
+	min-height: 20vh;
+	padding: var(--padding);
+	margin: var(--margin);
+}
+
+.navbar {
+	display: flex;
+	flex-direction: row;
+	gap: 1em;
+	padding: var(--padding);
+	position: top;
+
+}
+
+.navbar * {
+	margin: var(--margin);
+	padding: calc(2 * var(--padding));	
+	background-color: var(--accent);
+}
+
+.navbar a {
+	text-decoration: none;
+	color: var(--text);
+}
+
+.navbar a:hover {
+	background-color: var(--secondary);
+}
